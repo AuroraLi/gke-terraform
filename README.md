@@ -1,1 +1,2 @@
-# gke-terraform
+# Sample Terraform for GKE
+
