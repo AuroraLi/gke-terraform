@@ -54,7 +54,9 @@ resource "google_container_cluster" "dyson_cluster" {
   workload_identity_config {
     identity_namespace = "${var.project}.svc.id.goog"
   }
-
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 
