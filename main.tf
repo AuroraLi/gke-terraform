@@ -83,11 +83,7 @@ resource "google_container_node_pool" "dyson_pool" {
     metadata = {
       disable-legacy-endpoints = "true"
     }
-    workload_metadata_config {
-      node_metadata = "GKE_METADATA_SERVER"
-    }
-
-
+    
   }
 }
 
