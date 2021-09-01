@@ -2,6 +2,20 @@
 
 This is a sample Terraform code to manage GKE clusters using Cloud Build. 
 
+Cloud Build includes steps that:
+- Create/check a backend storage for Terraform states
+- Initialize Terraform workspace
+- Plan Terraform
+- Apply Terraform 
+
+Terraform includes:
+- Create a GCP VPC and a subnetwork
+- Create regional GKE cluster
+- Create regional GKE cluster node pool
+- Enable [Workload Identity](https://cloud.google.com/blog/products/containers-kubernetes/introducing-workload-identity-better-authentication-for-your-gke-applications)
+
+
+
 ## How to use
 Enable required APIs:
 ```
@@ -34,3 +48,5 @@ To clean up, run the destroy Cloud Build:
 ```
 gcloud builds submits --config destroy.yaml
 ```
+
+## Best Practices

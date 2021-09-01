@@ -43,7 +43,7 @@ resource "google_compute_subnetwork" "subnet" {
 resource "google_container_cluster" "dyson_cluster" {
   project = var.project
   name               = "dyson-cluster"
-  location           = var.zone
+  location           = var.region
   remove_default_node_pool = true
   network = google_compute_network.network.id
   subnetwork = google_compute_subnetwork.subnet.id  
@@ -63,7 +63,7 @@ resource "google_container_cluster" "dyson_cluster" {
 resource "google_container_node_pool" "dyson_pool" {
   project    = var.project
   name       = "dysonpool"
-  location   = var.zone
+  location   = var.region
   cluster    = google_container_cluster.dyson_cluster.name
   initial_node_count = 1
  
