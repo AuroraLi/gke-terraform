@@ -45,7 +45,6 @@ resource "google_container_cluster" "dyson_cluster" {
   name               = "dyson-cluster"
   location           = var.zone
   remove_default_node_pool = true
-  networking_mode = "VPC_NATIVE"
   network = google_compute_network.network.id
   subnetwork = google_compute_subnetwork.subnet.id  
   ip_allocation_policy {
