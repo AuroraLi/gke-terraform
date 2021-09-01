@@ -49,4 +49,8 @@ To clean up, run the destroy Cloud Build:
 gcloud builds submits --config destroy.yaml
 ```
 
-## Best Practices
+## Suggested Practices
+* Use a Cloud storage or centralized storage as terraform backend to store terraform state
+* Keep parameters in `variables.tf` and try to parameterize as many paramenters as possible instead of having hard coded values in the codes
+* Do NOT use the default node pool. Set `remove_default_node_pool` to true and create another `google_container_node_pool` resource linked to cluster
+* Use Terraform `prevent_destroy` to prevent unintended destroy or redeploy for essential resources. 
