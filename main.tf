@@ -26,25 +26,26 @@ resource "google_compute_network" "network" {
 
 resource "google_compute_subnetwork" "subnet" {
   name          = "subnet"
-  ip_cidr_range = "10.2.0.0/16"
+  ip_cidr_range = var.primary_ip 
   region        = var.region
   network       = google_compute_network.network.id
   secondary_ip_range {
     range_name    = "range-1"
-    ip_cidr_range = "192.168.0.0/18"
+    ip_cidr_range = var.pod_ip
   }
   secondary_ip_range {
     range_name    = "range-2"
-    ip_cidr_range = "192.168.128.0/20"
+    ip_cidr_range = var.service_ip
   }
 }
 
 
-resource "google_container_cluster" "dyson_cluster" {
+resource "google_container_cluster" "gke_cluster" {
   project = var.project
-  name               = "dyson-cluster"
+  name               = 
   location           = var.region
   remove_default_node_pool = true
+  initial_node_count = 1
   network = google_compute_network.network.id
   subnetwork = google_compute_subnetwork.subnet.id  
   ip_allocation_policy {
@@ -60,11 +61,11 @@ resource "google_container_cluster" "dyson_cluster" {
 }
 
 
-resource "google_container_node_pool" "dyson_pool" {
+resource "google_container_node_pool" "gke_pool" {
   project    = var.project
-  name       = "dysonpool"
+  name       = "${var.cluster_name}-pool"
   location   = var.region
-  cluster    = google_container_cluster.dyson_cluster.name
+  cluster    = google_container_cluster.gke_cluster.name
   initial_node_count = 1
  
   autoscaling {
@@ -90,20 +91,20 @@ resource "google_container_node_pool" "dyson_pool" {
 }
 
 
-# Workload Identity IAM binding for Dyson in default namespace.
-resource "google_service_account_iam_member" "dyson-sa-workload-identity" {
-  service_account_id = google_service_account.dyson.name
+# Workload Identity IAM binding for GKE in default namespace.
+resource "google_service_account_iam_member" "gke-sa-workload-identity" {
+  service_account_id = google_service_account.gkesa.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project}.svc.id.goog[default/dyson]"
+  member             = "serviceAccount:${var.project}.svc.id.goog[default/default]"
   depends_on = [
-    google_container_cluster.dyson_cluster
+    google_container_cluster.gke_cluster
   ]
 }
 
 
-# Service account used by Dyson
-resource "google_service_account" "dyson" {
+# Service account used by GKE
+resource "google_service_account" "gkesa" {
   project      = var.project
-  account_id   = "dyson-sa"
-  display_name = "dyson-sa"
+  account_id   = "${var.cluster_name}-sa"
+  display_name = "${var.cluster_name}-sa"
 }
