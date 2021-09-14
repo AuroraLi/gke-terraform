@@ -66,11 +66,11 @@ resource "google_container_node_pool" "gke_pool" {
   name       = "${var.cluster_name}-pool"
   location   = var.region
   cluster    = google_container_cluster.gke_cluster.name
-  initial_node_count = 1
+  initial_node_count = 3
  
   autoscaling {
     min_node_count = 0
-    max_node_count = 4
+    max_node_count = 6
   }
 
   management {
